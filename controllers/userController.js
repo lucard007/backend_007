@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const { generateToken, veriifyToken } = require("../services/sessionService")
+const { cloudinary } = require("../utils/cloudinaryConfig")
 
 
 const signup = async (req, res)=>{
@@ -68,4 +69,19 @@ const verifyUserToken = async(req, res, next)=>{
 
 }
 
-module.exports = {signup, signin, verifyUserToken}
+const imageUpload = async(req, res)=>{
+    const {file} = req.body
+    try {
+        // console.log(file)
+        const result = await cloudinary.uploader.upload(file)
+        const url = result.secure_url
+        console.log(result)
+
+        return res.status(200).send({message: "Image uploaded sucessfully", url})
+   
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports = {signup, signin, verifyUserToken, imageUpload}

@@ -2,6 +2,7 @@ const userModel = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const { generateToken, veriifyToken } = require("../services/sessionService")
 const { cloudinary } = require("../utils/cloudinaryConfig")
+const { sendMail } = require("../utils/mailer")
 
 
 const signup = async (req, res)=>{
@@ -18,6 +19,7 @@ const signup = async (req, res)=>{
     if(!result){
         return res.status(400).send({message: "Error creating user"})
     }
+    sendMail(email, userName)
     return res.status(201).send({message: "Account created sucessfully", result})
     } catch (error) {
         console.log(error)
